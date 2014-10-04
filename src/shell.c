@@ -1,6 +1,6 @@
 #include "shell.h"
 #include <stddef.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include "clib.h"
 #include <string.h>
 #include "fio.h"
@@ -158,14 +158,14 @@ int fib(int x){
 }
 
 void fibonacci_command(int n , char* argv[]){
-    
+    /*
     if (n < 2){
         fio_printf(2, "\r\n plwase give a number \r\n");    
         return;
     }
     int x = atoi(argv[1]);
-    
-    fio_printf(1, "\r\n %d \r\n", fib(x));
+    */
+    fio_printf(1, "\r\n %d \r\n", fib(5));
 }
 
 void test_command(int n, char *argv[]) {

@@ -24,6 +24,7 @@ void help_command(int, char **);
 void host_command(int, char **);
 void mmtest_command(int, char **);
 void test_command(int, char **);
+void helloworld_command(int, char **);
 
 #define MKCL(n, d) {.name=#n, .fptr=n ## _command, .desc=d}
 
@@ -35,7 +36,8 @@ cmdlist cl[]={
 	MKCL(host, "Run command on host"),
 	MKCL(mmtest, "heap memory allocation test"),
 	MKCL(help, "help"),
-	MKCL(test, "test new function")
+	MKCL(test, "test new function"),
+              MKCL(helloworld, "print hello world")
 };
 
 int parse_command(char *str, char *argv[]){
@@ -60,7 +62,7 @@ int parse_command(char *str, char *argv[]){
 }
 
 void ls_command(int n, char *argv[]){
-
+    fio_printf(1, "\r\n ls command\r \n");
 }
 
 int filedump(const char *filename){
@@ -132,12 +134,16 @@ void host_command(int n, char *argv[]){
     }
 }
 
-void help_command(int n,char *argv[]){
+void help_command(int n, char * argv[]){
 	int i;
 	fio_printf(1, "\r\n");
 	for(i=0;i<sizeof(cl)/sizeof(cl[0]); ++i){
 		fio_printf(1, "%s - %s\r\n", cl[i].name, cl[i].desc);
 	}
+}
+
+void helloworld_command(int n , char* argv[]){
+    fio_printf(1,"\r\nHello World\r\n");
 }
 
 void test_command(int n, char *argv[]) {

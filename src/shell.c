@@ -1,5 +1,6 @@
 #include "shell.h"
 #include <stddef.h>
+#include <stdlib.h>
 #include "clib.h"
 #include <string.h>
 #include "fio.h"
@@ -25,6 +26,7 @@ void host_command(int, char **);
 void mmtest_command(int, char **);
 void test_command(int, char **);
 void helloworld_command(int, char **);
+void fibonacci_command(int, char**);
 
 #define MKCL(n, d) {.name=#n, .fptr=n ## _command, .desc=d}
 
@@ -37,7 +39,8 @@ cmdlist cl[]={
 	MKCL(mmtest, "heap memory allocation test"),
 	MKCL(help, "help"),
 	MKCL(test, "test new function"),
-              MKCL(helloworld, "print hello world")
+              MKCL(helloworld, "print hello world"),
+              MKCL(fibonacci, "fibonacci")
 };
 
 int parse_command(char *str, char *argv[]){
@@ -62,7 +65,7 @@ int parse_command(char *str, char *argv[]){
 }
 
 void ls_command(int n, char *argv[]){
-    fio_printf(1, "\r\n ls command\r \n");
+    fio_printf(1, "\r\n ls command\r \n"); 
 }
 
 int filedump(const char *filename){
@@ -144,6 +147,25 @@ void help_command(int n, char * argv[]){
 
 void helloworld_command(int n , char* argv[]){
     fio_printf(1,"\r\nHello World\r\n");
+}
+
+int fib(int x){
+    if (x == 0)
+        return 1;
+    if (x == 1)
+        return 1;
+    return fib(x-1) + fib(x-2);
+}
+
+void fibonacci_command(int n , char* argv[]){
+    
+    if (n < 2){
+        fio_printf(2, "\r\n plwase give a number \r\n");    
+        return;
+    }
+    int x = atoi(argv[1]);
+    
+    fio_printf(1, "\r\n %d \r\n", fib(x));
 }
 
 void test_command(int n, char *argv[]) {

@@ -72,17 +72,17 @@ $(OUTDIR)/$(TARGET).lst: $(OUTDIR)/$(TARGET).elf
 $(OUTDIR)/$(TARGET).elf: $(OBJ) $(DAT)
 	@echo "    LD      "$@
 	@echo "    MAP     "$(OUTDIR)/$(TARGET).map
-	@$(CROSS_COMPILE)gcc $(CFLAGS) -Wl,-Map=$(OUTDIR)/$(TARGET).map -o $@ $^
+	@$(CROSS_COMPILE)gcc $(CFLAGS) -v -Wl,-Map=$(OUTDIR)/$(TARGET).map -o $@ $^
 
 $(OUTDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	@echo "    CC      "$@
-	@$(CROSS_COMPILE)gcc $(CFLAGS) -MMD -MF $@.d -o $@ -c $(INCLUDES) $<
+	@$(CROSS_COMPILE)gcc $(CFLAGS) -v -MMD -MF $@.d -o $@ -c $(INCLUDES) $<
 
 $(OUTDIR)/%.o: %.s
 	@mkdir -p $(dir $@)
 	@echo "    CC      "$@
-	@$(CROSS_COMPILE)gcc $(CFLAGS) -MMD -MF $@.d -o $@ -c $(INCLUDES) $<
+	@$(CROSS_COMPILE)gcc $(CFLAGS) -v -MMD -MF $@.d -o $@ -c $(INCLUDES) $<
 
 clean:
 	rm -rf $(OUTDIR) $(TMPDIR)

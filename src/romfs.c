@@ -7,11 +7,18 @@
 #include "romfs.h"
 #include "osdebug.h"
 #include "hash-djb2.h"
+#include "clib.h"
 
 struct romfs_fds_t {
     const uint8_t * file;
     uint32_t cursor;
 };
+
+struct romfs_file_t{
+    uint32_t hash;
+    uint32_t len;
+    uint8_t data;
+}__attribute__((packed));
 
 static struct romfs_fds_t romfs_fds[MAX_FDS];
 
@@ -77,8 +84,12 @@ const uint8_t * romfs_get_file_by_hash(const uint8_t * romfs, uint32_t h, uint32
         }
     }
 
+
     return NULL;
 }
+
+
+
 
 static int romfs_open(void * opaque, const char * path, int flags, int mode) {
     uint32_t h = hash_djb2((const uint8_t *) path, -1);

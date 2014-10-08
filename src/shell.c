@@ -16,6 +16,8 @@ typedef struct {
 	const char *desc;
 } cmdlist;
 
+
+int myatoi(char* str);
 void ls_command(int, char **);
 void man_command(int, char **);
 void cat_command(int, char **);
@@ -45,6 +47,15 @@ cmdlist cl[]={
               MKCL(fibonacci, "fibonacci"),
               MKCL(filedump, "filedump")
 };
+
+int myatoi(char* str){
+    int num = 0;
+    while(*str != '\0'){
+        num = num*10 + *str - '0';
+        ++str;
+    }
+    return num;
+}
 
 int parse_command(char *str, char *argv[]){
 	int b_quote=0, b_dbquote=0;
@@ -182,14 +193,14 @@ int fib(int x){
 }
 
 void fibonacci_command(int n , char* argv[]){
-    /*
+    
     if (n < 2){
         fio_printf(2, "\r\n plwase give a number \r\n");    
         return;
     }
-    int x = atoi(argv[1]);
-    */
-    fio_printf(1, "\r\n %d \r\n", fib(5));
+    int x = myatoi(argv[1]);
+    
+    fio_printf(1, "\r\n %d \r\n", fib(x));
 }
 
 void test_command(int n, char *argv[]) {

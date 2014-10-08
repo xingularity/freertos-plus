@@ -17,7 +17,7 @@ struct romfs_fds_t {
 struct romfs_file_t{
     uint32_t hash;
     uint32_t len;
-    uint8_t data;
+    uint32_t filename_length;
 }__attribute__((packed));
 
 static struct romfs_fds_t romfs_fds[MAX_FDS];
@@ -28,9 +28,10 @@ static uint32_t get_unaligned(const uint8_t * d) {
 
 static ssize_t romfs_read(void * opaque, void * buf, size_t count) {
     struct romfs_fds_t * f = (struct romfs_fds_t *) opaque;
+    //It means that the size of the file is put in front of the file pointer
     const uint8_t * size_p = f->file - 4;
     uint32_t size = get_unaligned(size_p);
-    
+    //Can't read larger than the file
     if ((f->cursor + count) > size)
         count = size - f->cursor;
 

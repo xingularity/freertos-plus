@@ -1,6 +1,6 @@
 #include "shell.h"
 #include <stddef.h>
-//#include <stdlib.h>
+#include <stdlib.h>
 #include "clib.h"
 #include <string.h>
 #include "fio.h"
@@ -26,6 +26,8 @@ void host_command(int, char **);
 void mmtest_command(int, char **);
 void test_command(int, char **);
 void helloworld_command(int, char **);
+int filedump(char* filename);
+void filedump_command(int, char **);
 void fibonacci_command(int, char**);
 
 #define MKCL(n, d) {.name=#n, .fptr=n ## _command, .desc=d}
@@ -40,7 +42,8 @@ cmdlist cl[]={
 	MKCL(help, "help"),
 	MKCL(test, "test new function"),
               MKCL(helloworld, "print hello world"),
-              MKCL(fibonacci, "fibonacci")
+              MKCL(fibonacci, "fibonacci"),
+              MKCL(filedump, "filedump")
 };
 
 int parse_command(char *str, char *argv[]){
@@ -68,13 +71,34 @@ void ls_command(int n, char *argv[]){
     fio_printf(1, "\r\n ls command\r \n"); 
 }
 
-int filedump(const char *filename){
-	char buf[128];
+int filedump(char* filename){
+    char buf[128];
 
-	int fd=fs_open(filename, 0, O_RDONLY);
+    int fd=fs_open(filename, 0, O_RDONLY);
+
+    if(fd==OPENFAIL)
+        return 0;
+
+    fio_printf(1, "\r\n");
+
+    int count;
+    while((count=fio_read(fd, buf, sizeof(buf)))>0){
+        fio_write(1, buf, count);
+    }
+
+    fio_close(fd);
+    return 1;
+}
+
+void filedump_command(int n, char *argv[]){
+	char buf[128];
+              if (n == 1)
+                return ;
+
+	int fd=fs_open(argv[1], 0, O_RDONLY);
 
 	if(fd==OPENFAIL)
-		return 0;
+		return ;
 
 	fio_printf(1, "\r\n");
 
@@ -84,7 +108,7 @@ int filedump(const char *filename){
 	}
 
 	fio_close(fd);
-	return 1;
+	return ;
 }
 
 void ps_command(int n, char *argv[]){

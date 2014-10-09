@@ -195,7 +195,7 @@ int fib(int x){
 void fibonacci_command(int n , char* argv[]){
     
     if (n < 2){
-        fio_printf(2, "\r\n plwase give a number \r\n");    
+        fio_printf(2, "\r\n please give a number \r\n");    
         return;
     }
     int x = myatoi(argv[1]);

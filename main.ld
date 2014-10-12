@@ -3,7 +3,6 @@ MEMORY
 {
   FLASH (rx) : ORIGIN = 0x00000000, LENGTH = 128k
   RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 80K
-
 }
 
 SECTIONS
@@ -13,9 +12,9 @@ SECTIONS
 		KEEP(*(.isr_vector))
  		*(.text)
  		*(.text.*)
-		*(.rodata)
+		*(.rodata*)
 		_sromfs = .;
-                            *(.rom*)
+        *(.rom*)
 		_eromfs = .;
 		_sidata = .;
 	} >FLASH

@@ -214,7 +214,7 @@ void test_command(int n, char *argv[]) {
         fio_printf(1, "Open file error!\n\r");
         return;
     }
-
+    
     char *buffer = "Test host_write function which can write data to output/syslog\n";
     error = host_action(SYS_WRITE, handle, (void *)buffer, strlen(buffer));
     if(error != 0) {
@@ -222,7 +222,12 @@ void test_command(int n, char *argv[]) {
         host_action(SYS_CLOSE, handle);
         return;
     }
-
+    
+    if ((n > 1) && (n <3)){
+        char ansstr[30];
+        sprintf(ansstr, "The answer of fibonacci is %d.\r\n", fib(myatoi(argv[1])));
+        error = host_action(SYS_WRITE, handle, (void *)ansstr, strlen(ansstr));
+    }
     host_action(SYS_CLOSE, handle);
 }
 

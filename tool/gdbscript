@@ -2,8 +2,9 @@
 file build/main.elf
 target remote :3333
 
-b main
+b main.c:181
 
-
+# This one can call test command. However, it's not a good idea because the second "char*[]" type variables can't pass into it.
+call test_command(1,0)
 
 c

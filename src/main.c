@@ -146,6 +146,7 @@ void system_logger(void *pvParameters)
     }
 
     host_action(SYS_CLOSE, handle);
+	vTaskDelete( NULL );
 }
 
 void testTask(void* para){
@@ -160,8 +161,7 @@ void testTask(void* para){
 		return;
 	}
 
-	char *buffer = "Test host_write function which can write data to output/syslog with xTaskCreate\n";
-	error = host_action(SYS_WRITE, handle, (void *)buffer, strlen(buffer));
+	error = host_action(SYS_WRITE, handle, (void *)para, strlen(para));
 	if(error != 0) {
 		fio_printf(1, "Write file error! Remain %d bytes didn't write in the file.\n\r", error);
 		host_action(SYS_CLOSE, handle);
@@ -169,6 +169,7 @@ void testTask(void* para){
 	}
 
 	host_action(SYS_CLOSE, handle);
+	vTaskDelete( NULL );
 }
 
 int main()
@@ -192,20 +193,20 @@ int main()
 	/* Create a task to output text read from romfs. */
 	xTaskCreate(command_prompt,
 	            (signed portCHAR *) "CLI",
-	            512 /* stack size */, NULL, tskIDLE_PRIORITY + 2, NULL);
+	            512 /* stack size */, NULL, tskIDLE_PRIORITY, NULL);
 
-	char* testTaskPrintStr = "Test Task";
+	char* testTaskPrintStr = "Test Task Output";
 	xTaskHandle * testTaskHandle = 0;
 	xTaskCreate(testTask,
 				(signed portCHAR *) "testTask",
 				512 /* stack size */, testTaskPrintStr, tskIDLE_PRIORITY + 2, testTaskHandle);
 
-#if 0
+//#if 0
 	/* Create a task to record system log. */
 	xTaskCreate(system_logger,
 	            (signed portCHAR *) "Logger",
 	            1024 /* stack size */, NULL, tskIDLE_PRIORITY + 1, NULL);
-#endif
+//#endif
 
 	/* Start running the tasks. */
 	vTaskStartScheduler();

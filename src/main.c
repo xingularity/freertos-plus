@@ -194,11 +194,11 @@ int main()
 	            (signed portCHAR *) "CLI",
 	            512 /* stack size */, NULL, tskIDLE_PRIORITY + 2, NULL);
 
-	//char* testTaskPrintStr = "Test Task";
-	//xTaskHandle * testTaskHandle = 0;
-	//xTaskCreate(testTask,
-	//			(signed portCHAR *) "testTask",
-	//			512 /* stack size */, testTaskPrintStr, tskIDLE_PRIORITY + 2, testTaskHandle);
+	char* testTaskPrintStr = "Test Task";
+	xTaskHandle * testTaskHandle = 0;
+	xTaskCreate(testTask,
+				(signed portCHAR *) "testTask",
+				512 /* stack size */, testTaskPrintStr, tskIDLE_PRIORITY + 2, testTaskHandle);
 
 #if 0
 	/* Create a task to record system log. */

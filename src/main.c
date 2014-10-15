@@ -85,6 +85,7 @@ char recv_byte()
 	while(!xQueueReceive(serial_rx_queue, &msg, portMAX_DELAY));
 	return msg;
 }
+
 void command_prompt(void *pvParameters)
 {
 	char buf[128];
@@ -95,7 +96,7 @@ void command_prompt(void *pvParameters)
 	while(1){
                 fio_printf(1, "%s", hint);
 		fio_read(0, buf, 127);
-	
+
 		int n=parse_command(buf, argv);
 
 		/* will return pointer to the command function */
@@ -143,8 +144,31 @@ void system_logger(void *pvParameters)
 
         vTaskDelay(xDelay);
     }
-    
+
     host_action(SYS_CLOSE, handle);
+}
+
+void testTask(void* para){
+	int handle;
+	int error;
+
+	fio_printf(1, "\r\n");
+
+	handle = host_action(SYS_OPEN, "output/syslog", 8);
+	if(handle == -1) {
+		fio_printf(1, "Open file error!\n\r");
+		return;
+	}
+
+	char *buffer = "Test host_write function which can write data to output/syslog with xTaskCreate\n";
+	error = host_action(SYS_WRITE, handle, (void *)buffer, strlen(buffer));
+	if(error != 0) {
+		fio_printf(1, "Write file error! Remain %d bytes didn't write in the file.\n\r", error);
+		host_action(SYS_CLOSE, handle);
+		return;
+	}
+
+	host_action(SYS_CLOSE, handle);
 }
 
 int main()
@@ -152,16 +176,16 @@ int main()
 	init_rs232();
 	enable_rs232_interrupts();
 	enable_rs232();
-	
+
 	fs_init();
 	fio_init();
-	
+
 	register_romfs("romfs", &_sromfs);
-	
+
 	/* Create the queue used by the serial task.  Messages for write to
 	 * the RS232. */
 	vSemaphoreCreateBinary(serial_tx_wait_sem);
-	/* Add for serial input 
+	/* Add for serial input
 	 * Reference: www.freertos.org/a00116.html */
 	serial_rx_queue = xQueueCreate(1, sizeof(char));
 
@@ -169,6 +193,12 @@ int main()
 	xTaskCreate(command_prompt,
 	            (signed portCHAR *) "CLI",
 	            512 /* stack size */, NULL, tskIDLE_PRIORITY + 2, NULL);
+
+	//char* testTaskPrintStr = "Test Task";
+	//xTaskHandle * testTaskHandle = 0;
+	//xTaskCreate(testTask,
+	//			(signed portCHAR *) "testTask",
+	//			512 /* stack size */, testTaskPrintStr, tskIDLE_PRIORITY + 2, testTaskHandle);
 
 #if 0
 	/* Create a task to record system log. */
@@ -179,7 +209,6 @@ int main()
 
 	/* Start running the tasks. */
 	vTaskStartScheduler();
-
 	return 0;
 }
 

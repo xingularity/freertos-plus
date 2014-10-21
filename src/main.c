@@ -146,7 +146,6 @@ void system_logger(void *pvParameters)
     }
 
     host_action(SYS_CLOSE, handle);
-	vTaskDelete( NULL );
 }
 
 void testTask(void* para){
